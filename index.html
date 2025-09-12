@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELL Strategies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fff0f3ff;
+            color: #590d22ff;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .principle-button {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            color: #fff;
+        }
+        .principle-button.active {
+            border: 2px solid #590d22ff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.12);
+        }
+        .strategy-item {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .strategy-item:hover {
+            background-color: #ffccd5;
+        }
+        .glossary-content {
+            display: none;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border-left: 4px solid;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .principle-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.4s ease-in-out;
+        }
+        .banner {
+            position: relative;
+            height: 20rem; /* Adjusted for better mobile and desktop view */
+            background-image: url('https://images.unsplash.com/photo-1517524005697-3932207b9a54?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* REAL CHERRY BLOSSOM IMAGE */
+            background-size: cover;
+            background-position: center;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* Add a sepia filter to match the reddish-pink theme */
+            filter: sepia(0.5) hue-rotate(-20deg) saturate(1.5) brightness(0.9);
+        }
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #800f2fff; /* Use a dark color from the palette */
+            opacity: 0.4; /* Make it semi-transparent for text readability */
+        }
+        .banner-content {
+            position: relative;
+            z-index: 10;
+            color: #fff;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="container mx-auto">
+        <!-- Banner with image and overlay -->
+        <div class="banner">
+            <div class="banner-content">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">Strategies for English Language Learners</h1>
+                <p class="text-lg">Click on a strategy to see its description and examples from the glossary.</p>
+            </div>
+        </div>
+
+        <!-- Buttons for principles -->
+        <div id="principle-buttons" class="flex flex-wrap justify-center gap-4 mb-8">
+            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all active" data-principle="Focus on Academic Language" style="background-color: #800f2fff;">Focus on Academic Language</button>
+            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Make Content Comprehensible" style="background-color: #c9184aff;">Make Content Comprehensible</button>
+            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Provide Scaffolding for Learning" style="background-color: #ff4d6dff;">Provide Scaffolding for Learning</button>
+            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Integrate Content and Language Learning" style="background-color: #ff758fff;">Integrate Content and Language Learning</button>
+            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Build on Background and Interests" style="background-color: #ff8fa3ff;">Build on Background and Interests</button>
+        </div>
+
+        <main id="strategies-container">
+            <!-- Content will be generated here by JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const strategiesData = {
+                "Focus on Academic Language": {
+                    "Primary Strategies": [
+                        "4 to 1", "Anticipation Guides", "Choral Reading", "Closed Sort Tasks", "Cloze Passages", "Cognates",
+                        "Collaborative Dialogues", "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
+                        "Graphic Organizers", "Graphic Organizers for Writing", "Guided Reading", "H Charts", "Information Gap",
+                        "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "Language Experience Approach (LEA)",
+                        "Mix and Match", "Model Academic Language", "Open Sort Tasks", "Peer-Assisted Learning Strategies (PALS)",
+                        "Paraphrase Passport", "Picture Walk", "Question-Answer Relationships (QAR)", "Reader's Theatre",
+                        "Reciprocal Teaching", "Report Frames", "Shared Reading", "Shared Writing", "Story Maps", "Teach the Text Backward",
+                        "Teacher Read Aloud", "Text to Graphics and Back Again", "Think-Write-Pair-Share", "Word/Picture Banks",
+                        "Write a Letter"
+                    ],
+                    "Additional Strategies": [
+                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
+                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
+                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
+                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
+                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
+                    ]
+                },
+                "Make Content Comprehensible": {
+                    "Primary Strategies": [
+                        "Contextualize Language", "Key Sentence Frames", "Model Academic Language", "Peer-Assisted Learning Strategies (PALS)",
+                        "Picture Walk", "Question-Answer Relationships (QAR)", "Reciprocal Teaching", "Shared Reading",
+                        "Shared Writing", "Structured Note-Taking", "Teacher Read Aloud", "Text to Graphics and Back Again",
+                        "Think-Write-Pair-Share", "Word/Picture Banks", "H Charts", "Give One - Get One", "I Have... Who Has...?",
+                        "Wait Time", "Wait Time Two"
+                    ],
+                    "Additional Strategies": [
+                        "Act It Out", "Brainstorming", "Choral Reading", "Cloze Passages", "Cognates", "Collaborative Dialogues",
+                        "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
+                        "Exit Slips", "Field Trips", "First Language Support", "Fish Bowl", "Four Corners", "Graphic Organizers",
+                        "Guided Reading", "Hand-on Activities", "Headbands", "Information Gap", "Inside Outside Circle",
+                        "Jigsaw Reading", "K-W-L Chart", "Language Experience Approach (LEA)", "Line Up", "Listen and Point",
+                        "Memory Lane", "Mix and Match", "One-Word", "One-Word Sentences", "Open Sort Tasks", "Paraphrase Passport",
+                        "Picture Word Inductive Model", "Quickwrites", "Reader's Theatre", "Report Frames", "Role Play",
+                        "Roving Charts", "Self-Assessment Scales for Vocabulary Learning", "Sentence-Picture Match", "Shared Writing",
+                        "Snowball", "Stir the Class", "Story Maps", "Strategy Cards", "Structured Note-Taking", "Symbolic Storyboarding",
+                        "T Charts", "Tableaux", "Teach the Text Backward", "Teacher Talk", "Think-Pair-Share", "Think-Pair-Share Squared",
+                        "Ticket to Leave", "Total Physical Response", "Turn and Talk", "Varied Grouping Formats", "Varied Questioning Formats",
+                        "Wait Time", "Wait Time Two", "Word Walls", "Wordless Picture Books", "Write a Letter"
+                    ]
+                },
+                "Provide Scaffolding for Learning": {
+                    "Primary Strategies": [
+                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
+                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
+                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
+                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
+                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
+                    ],
+                    "Additional Strategies": [
+                        "4 to 1", "Anticipation Guides", "Choral Reading", "Cloze Passages", "Cognates", "Collaborative Dialogues",
+                        "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
+                        "Graphic Organizers", "Graphic Organizers for Writing", "Guided Reading", "H Charts", "Information Gap",
+                        "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "Language Experience Approach (LEA)",
+                        "Mix and Match", "Model Academic Language", "Open Sort Tasks", "Peer-Assisted Learning Strategies (PALS)",
+                        "Paraphrase Passport", "Picture Walk", "Question-Answer Relationships (QAR)", "Reader's Theatre",
+                        "Reciprocal Teaching", "Report Frames", "Shared Reading", "Shared Writing", "Story Maps", "Teach the Text Backward",
+                        "Teacher Read Aloud", "Text to Graphics and Back Again", "Think-Write-Pair-Share", "Word/Picture Banks",
+                        "Write a Letter"
+                    ]
+                },
+                "Integrate Content and Language Learning": {
+                    "Primary Strategies": [
+                        "Choral Reading", "Closed Sort Tasks", "Cloze Passages", "Cognates", "Collaborative Dialogues",
+                        "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
+                        "Graphic Organizers", "Graphic Organizers for Writing", "Guided Reading", "H Charts", "Information Gap",
+                        "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "Language Experience Approach (LEA)",
+                        "Mix and Match", "Model Academic Language", "Open Sort Tasks", "Peer-Assisted Learning Strategies (PALS)",
+                        "Paraphrase Passport", "Picture Walk", "Question-Answer Relationships (QAR)", "Reader's Theatre",
+                        "Reciprocal Teaching", "Report Frames", "Shared Reading", "Shared Writing", "Story Maps", "Teach the Text Backward",
+                        "Teacher Read Aloud", "Text to Graphics and Back Again", "Think-Write-Pair-Share", "Word/Picture Banks",
+                        "Write a Letter"
+                    ],
+                    "Additional Strategies": [
+                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
+                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
+                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
+                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
+                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
+                    ]
+                },
+                "Build on Background and Interests": {
+                    "Primary Strategies": [
+                        "4 to 1", "Anticipation Guides", "Choral Reading", "Closed Sort Tasks", "Cloze Passages", "Cognates",
+                        "Collaborative Dialogues", "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
+                        "Graphic Organizers", "Graphic Organizers for Writing", "Guided Reading", "H Charts", "Information Gap",
+                        "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "Language Experience Approach (LEA)",
+                        "Mix and Match", "Model Academic Language", "Open Sort Tasks", "Peer-Assisted Learning Strategies (PALS)",
+                        "Paraphrase Passport", "Picture Walk", "Question-Answer Relationships (QAR)", "Reader's Theatre",
+                        "Reciprocal Teaching", "Report Frames", "Shared Reading", "Shared Writing", "Story Maps", "Teach the Text Backward",
+                        "Teacher Read Aloud", "Text to Graphics and Back Again", "Think-Write-Pair-Share", "Word/Picture Banks",
+                        "Write a Letter"
+                    ],
+                    "Additional Strategies": [
+                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
+                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
+                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
+                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
+                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
+                    ]
+                }
+            };
+            
+            const glossaryData = {
+                "4 to 1": "A strategy for summarizing a text. Students identify four key concepts, four key details, four key vocabulary words, and one main idea.",
+                "Act It Out": "A kinesthetic strategy where students physically act out a concept or vocabulary word to demonstrate understanding. It is especially effective for verbs and abstract concepts.",
+                "Anticipation Guides": "A pre-reading activity where students agree or disagree with a series of statements related to the text they are about to read. This activates prior knowledge and sets a purpose for reading.",
+                "Brainstorming": "A collaborative process where students generate ideas freely related to a topic. It encourages creative thinking and can be used to activate prior knowledge before a lesson.",
+                "Choral Reading": "A fluency strategy where students read a text aloud together as a group. This reduces anxiety for emergent readers and helps build reading speed and prosody.",
+                "Closed Sort Tasks": "A vocabulary strategy where students categorize a list of words or concepts into pre-determined categories. This helps them understand relationships between concepts.",
+                "Cloze Passages": "A reading comprehension strategy where words are removed from a text and students must fill in the blanks. It requires them to use context clues to determine the missing words.",
+                "Cognates": "Words in two different languages that have a similar origin, spelling, and meaning (e.g., 'information' in English and 'información' in Spanish). Teaching cognates helps build vocabulary.",
+                "Collaborative Dialogues": "A conversational strategy where students work in pairs or small groups to discuss a topic, solve a problem, or complete a task. This provides a low-stakes environment for language practice.",
+                "Concept/Idea Maps": "A visual representation of a topic or concept, showing the relationships between main ideas and supporting details. This helps students organize information.",
+                "Content Learning Logs": "A writing strategy where students maintain a notebook or journal to record their thoughts, questions, and new learning during a unit of study. It helps them process content.",
+                "Contextualize Language": "The practice of putting words into a meaningful context, such as using them in a sentence, to help students understand their meaning and use. It is a key part of vocabulary instruction.",
+                "Cornell Notes": "A note-taking system where students divide their paper into three sections: a right column for notes, a left column for keywords and questions, and a bottom section for a summary. This helps organize and review information.",
+                "Dialogue Journals": "A conversational writing strategy where a student writes to the teacher in a journal, and the teacher writes back. It provides authentic practice with written language and builds a rapport between teacher and student.",
+                "Dictations": "A listening and writing exercise where the teacher reads a passage or a series of sentences aloud, and students write them down verbatim. This practice strengthens listening and spelling skills.",
+                "Directed Reading/Thinking (DRTA)": "A reading comprehension strategy that guides students through a text by having them make predictions, read to confirm or revise predictions, and then make new predictions. It teaches them to be active readers.",
+                "Exit Slips": "A quick, low-stakes assessment strategy where students write a short response to a prompt on a piece of paper before leaving class. It provides the teacher with immediate feedback on student understanding.",
+                "Field Trips": "An instructional strategy that takes students outside of the classroom to experience a place or concept firsthand. This provides real-world context for learning.",
+                "First Language Support": "The practice of allowing or encouraging students to use their native language to support their understanding of content. It can be used for brainstorming, note-taking, or clarifying concepts.",
+                "Fish Bowl": "A cooperative learning strategy where a small group of students discusses a topic in a circle while the rest of the class sits in a larger circle and observes. This models effective discussion techniques.",
+                "Four Corners": "A kinesthetic discussion strategy where students move to a designated corner of the room that corresponds to a statement of opinion or a response to a question. This promotes movement and engagement.",
+                "Give One - Get One": "A collaborative strategy where students walk around the room and exchange information with a partner. Each student 'gives' an idea they have and 'gets' an idea they don't have. It encourages peer interaction and review.",
+                "Graphic Organizers": "A visual tool that helps students organize information, such as a Venn diagram, a T-chart, or a concept map. It makes relationships between ideas more explicit and accessible.",
+                "Graphic Organizers for Writing": "Visual tools specifically designed to help students pre-write and plan their compositions. Examples include story maps, plot diagrams, and report frames.",
+                "Guided Reading": "A small-group reading instruction strategy where the teacher works with students who read at a similar level. The teacher provides support and guidance as students read a new text.",
+                "H Charts": "A graphic organizer with an H-shape, used to compare and contrast two concepts. The left column is for the first concept, the right for the second, and the middle is for similarities.",
+                "Hand-on Activities": "An instructional strategy that allows students to learn by doing. These activities require students to manipulate physical objects to understand a concept.",
+                "Headbands": "A game where students wear a card with a word or picture on their head without seeing it. They then ask 'yes' or 'no' questions to figure out what their word is. This is a fun way to practice vocabulary.",
+                "I Have... Who Has...?": "A chain-reaction game where each student has a card with a question and an answer. The game begins with a student reading their 'Who has...?' question, and the student with the correct answer on their card responds with 'I have...' It is excellent for reviewing content.",
+                "Information Gap": "A collaborative activity where students work in pairs to share information. Each student has a piece of information that the other needs to complete a task. It promotes authentic communication.",
+                "Inside Outside Circle": "A kinesthetic discussion strategy where half the students form an inner circle and the other half form an outer circle. Students rotate to talk with a new partner. This provides opportunities for many short conversations.",
+                "Jigsaw Reading": "A collaborative reading strategy where a text is broken into smaller sections. Each student in a group reads a different section, then teaches it to the others. This promotes interdependence and deep comprehension.",
+                "K-W-L Chart": "A graphic organizer used to activate prior knowledge and set a purpose for learning. Students write what they **K**now, what they **W**ant to know, and what they **L**earned.",
+                "Key Sentence Frames": "Sentence structures provided by the teacher to help students formulate their thoughts and responses. These scaffolds reduce the cognitive load of producing grammatically correct sentences.",
+                "Language Experience Approach (LEA)": "A reading and writing strategy based on students' oral language. The teacher transcribes a story that the student dictates, which then becomes the reading material. It connects language with personal experiences.",
+                "Line Up": "A kinesthetic strategy where students arrange themselves in a line based on a characteristic, such as birthday, height, or a spectrum of opinion. It promotes movement and conversation.",
+                "Listen and Point": "A listening comprehension strategy where students point to a word or picture on a page as the teacher reads it. This provides a low-stakes way to assess listening skills and build vocabulary.",
+                "Memory Lane": "A game where students recall and share what they remember about a previous topic. This is a simple and effective way to review and connect old and new learning.",
+                "Mix and Match": "A vocabulary strategy where students match a term with its definition or an image. This can be done with cards, on a worksheet, or as a group activity.",
+                "Model Academic Language": "The practice of using and explicitly teaching the precise vocabulary and grammatical structures of academic subjects. The teacher models how to talk and write like an expert in a field.",
+                "One-Word": "A quick-write strategy where students respond to a prompt using a single word. It is a simple way to activate thinking and can be a springboard for further discussion.",
+                "One-Word Sentences": "An oral language strategy where students are prompted to use a single, specific word to describe or respond to something. It is a scaffold for speaking.",
+                "Open Sort Tasks": "A vocabulary strategy where students are given a list of words or concepts and asked to create their own categories to sort them into. This requires higher-order thinking and understanding of relationships.",
+                "Paraphrase Passport": "A strategy where a student must orally paraphrase a new concept to a partner before being allowed to 'pass' to the next task or activity. This ensures they have processed the information.",
+                "Patterned Oral Language": "The practice of using predictable sentence patterns to help students practice new vocabulary and grammatical structures. The teacher models the pattern, and students fill in the blanks.",
+                "Peer-Assisted Learning Strategies (PALS)": "A structured cooperative learning strategy where students work in pairs to help each other learn. One student is the 'coach' and the other is the 'reader' or 'writer.'",
+                "Picture Walk": "A pre-reading strategy where students look through the pictures in a book with the teacher and discuss what they see. This builds background knowledge and helps them make predictions.",
+                "Picture Word Inductive Model": "A literacy strategy where students identify objects in a picture, and the teacher writes the words underneath. This helps them connect spoken words to their written form.",
+                "Quickwrites": "A short, timed writing activity where students write for a set period without worrying about grammar or spelling. It is a way to generate ideas and increase fluency.",
+                "Question-Answer Relationships (QAR)": "A reading comprehension strategy that teaches students to differentiate between questions that are answered 'right there' in the text, those that require 'think and search,' and those that are 'on my own' (from background knowledge).",
+                "Reader's Theatre": "A dramatic reading of a story or script. Students read from their scripts and use their voices and gestures to portray characters. It builds fluency and comprehension.",
+                "Reciprocal Teaching": "A collaborative reading strategy where students take turns leading a group discussion about a text using four key skills: summarizing, questioning, clarifying, and predicting. It fosters active comprehension.",
+                "Report Frames": "A writing scaffold that provides students with a structure for a report, with headings and sentence starters to guide their writing. It reduces the cognitive load of organizing a text.",
+                "Role Play": "A kinesthetic strategy where students take on the roles of characters or professionals to act out a scene or a real-world scenario. This provides authentic language practice.",
+                "Roving Charts": "A collaborative brainstorming strategy where large pieces of paper are placed around the room with different topics. Students move from chart to chart, adding ideas to each one.",
+                "Self-Assessment Scales for Vocabulary Learning": "A strategy where students use a rating scale to assess their own knowledge of new vocabulary words. This helps them monitor their own learning and set goals.",
+                "Sentence-Picture Match": "A vocabulary or comprehension activity where students match a sentence to a corresponding picture. This connects written language to visual representation.",
+                "Shared Reading": "A whole-group reading strategy where the teacher reads a text aloud to the students, who follow along in their own copies. It models fluent reading and builds comprehension.",
+                "Shared Writing": "A collaborative writing strategy where the teacher and students compose a text together. The teacher acts as the scribe, writing down the students' ideas. This models the writing process.",
+                "Snowball": "A collaborative writing strategy where each student writes an idea on a piece of paper, wads it up into a 'snowball,' and throws it to another student. They then open the new snowball and add to the idea.",
+                "Stir the Class": "A kinesthetic strategy where students get up and move around the room to find a new partner or group to discuss a topic with. It encourages movement and varied interactions.",
+                "Story Maps": "A graphic organizer that helps students identify and organize the key elements of a story, such as characters, setting, problem, and solution. It improves reading comprehension.",
+                "Strategy Cards": "A tool that lists and explains different learning strategies. Students can refer to the cards to choose a strategy to apply to a new task. This promotes student self-regulation.",
+                "Structured Note-Taking": "A guided note-taking strategy where the teacher provides a pre-formatted template for students to fill in. This reduces the cognitive load of organizing notes.",
+                "Symbolic Storyboarding": "A strategy where students use simple pictures or symbols to represent the main ideas of a story or concept. It is a visual way to process and retell information.",
+                "T Charts": "A graphic organizer with two columns, shaped like a 'T,' used to compare and contrast two concepts or to list the pros and cons of a topic.",
+                "Tableaux": "A non-verbal, kinesthetic strategy where a group of students freezes in a pose to represent a scene, a moment, or an idea from a text. This helps students visualize and analyze a story.",
+                "Teach the Text Backward": "A comprehension strategy where the teacher starts with the end of a lesson or a text and works backward. This helps students understand the overall purpose and key takeaways.",
+                "Teacher Read Aloud": "A strategy where the teacher reads a text aloud to students, modeling fluent reading and engaging them in the story. It exposes students to new vocabulary and language structures.",
+                "Teacher Talk": "The practice of being mindful of one's own speech when teaching, such as using simple language, clear pronunciation, and intentional repetition to make content more accessible to ELLs.",
+                "Text to Graphics and Back Again": "A strategy where students transform a written text into a graphic organizer or visual representation, and then use that graphic to write a new text. This deepens understanding.",
+                "Think-Pair-Share": "A collaborative strategy where students first think individually about a question, then pair up with a partner to discuss their thoughts, and finally share their ideas with the whole class.",
+                "Think-Pair-Share Squared": "An extension of Think-Pair-Share where after the initial partner discussion, the pair joins another pair to form a group of four to discuss their ideas. This allows for more complex conversations.",
+                "Ticket to Leave": "A quick assessment strategy where students must complete a task or answer a question on a small piece of paper before they are allowed to leave the classroom.",
+                "Total Physical Response": "A language acquisition strategy where students respond to commands with physical actions. It is especially effective for teaching verbs and commands in the early stages of language learning.",
+                "Turn and Talk": "A simple discussion strategy where students turn to a partner and talk about a prompt for a short period of time. This provides immediate, low-stakes speaking practice.",
+                "Varied Grouping Formats": "The practice of grouping students in different ways (pairs, small groups, whole class) to promote a variety of interactions and learning opportunities.",
+                "Varied Questioning Formats": "The practice of using different types of questions (open-ended, closed, yes/no) to encourage different levels of thinking and language use from students.",
+                "Wait Time": "The practice of pausing after asking a question to give students, especially ELLs, time to process the question and formulate a response. This increases student participation.",
+                "Wait Time Two": "The practice of pausing after a student responds to a question to allow them to elaborate on their answer or for other students to contribute. This encourages deeper thought.",
+                "Word Walls": "A classroom display of high-frequency words, academic vocabulary, or content-specific terms. The words are posted alphabetically or by theme to serve as a visual reference.",
+                "Wordless Picture Books": "Picture books without text. These are great for ELLs because they can tell the story using their own words, focusing on storytelling and vocabulary without the pressure of reading.",
+                "Write a Letter": "A writing activity where students write a letter to a person or character related to the content they are learning. This provides an authentic purpose for writing."
+            };
+            
+            const strategiesContainer = document.getElementById('strategies-container');
+            const principleButtonsContainer = document.getElementById('principle-buttons');
+
+            const principleColors = {
+                "Focus on Academic Language": { main: "#800f2fff", light: "#ffccd5ff" },
+                "Make Content Comprehensible": { main: "#c9184aff", light: "#ffccd5ff" },
+                "Provide Scaffolding for Learning": { main: "#ff4d6dff", light: "#ffccd5ff" },
+                "Integrate Content and Language Learning": { main: "#ff758fff", light: "#ffccd5ff" },
+                "Build on Background and Interests": { main: "#ff8fa3ff", light: "#ffccd5ff" }
+            };
+
+            // Function to create a principle card
+            const createPrincipleCard = (principle, strategies) => {
+                const card = document.createElement('div');
+                card.className = 'principle-card p-6 mb-6';
+                card.setAttribute('data-principle', principle);
+                card.setAttribute('data-main-color', principleColors[principle].main);
+
+                const title = document.createElement('h2');
+                title.className = 'text-xl md:text-2xl font-semibold mb-4';
+                title.textContent = principle;
+                card.appendChild(title);
+
+                for (const group in strategies) {
+                    const groupTitle = document.createElement('h3');
+                    groupTitle.className = 'text-lg font-bold mt-4 mb-2';
+                    groupTitle.textContent = group;
+                    card.appendChild(groupTitle);
+
+                    const list = document.createElement('ul');
+                    list.className = 'grid grid-cols-1 gap-2';
+
+                    strategies[group].forEach(strategy => {
+                        const strategyElement = document.createElement('li');
+                        strategyElement.className = 'strategy-item p-3 rounded-lg flex items-center justify-between';
+                        strategyElement.innerHTML = `
+                            <span class="font-medium" style="color: ${principleColors[principle].main};">${strategy}</span>
+                            <svg class="w-5 h-5 transition-transform transform duration-300" style="color: #590d22ff;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        `;
+
+                        if (glossaryData[strategy]) {
+                            strategyElement.classList.add('cursor-pointer');
+                            strategyElement.addEventListener('click', () => toggleGlossary(strategy, strategyElement));
+                        } else {
+                            strategyElement.classList.remove('cursor-pointer');
+                            strategyElement.querySelector('svg').remove();
+                        }
+
+                        list.appendChild(strategyElement);
+                    });
+                    card.appendChild(list);
+                }
+                strategiesContainer.appendChild(card);
+            };
+
+            // Function to toggle the glossary content
+            const toggleGlossary = (strategy, element) => {
+                const glossaryContent = element.nextElementSibling;
+                const arrowIcon = element.querySelector('svg');
+                const principle = element.closest('.principle-card').getAttribute('data-principle');
+                const mainColor = principleColors[principle].main;
+                const lightColor = principleColors[principle].light;
+
+                if (glossaryContent && glossaryContent.classList.contains('glossary-content')) {
+                    glossaryContent.style.display = glossaryContent.style.display === 'block' ? 'none' : 'block';
+                    arrowIcon.classList.toggle('rotate-90');
+                } else {
+                    const newGlossaryContent = document.createElement('div');
+                    newGlossaryContent.className = 'glossary-content rounded-lg';
+                    newGlossaryContent.style.borderColor = mainColor;
+                    newGlossaryContent.style.backgroundColor = lightColor;
+                    newGlossaryContent.innerHTML = `<p>${glossaryData[strategy]}</p>`;
+                    element.parentNode.insertBefore(newGlossaryContent, element.nextSibling);
+                    newGlossaryContent.style.display = 'block';
+                    arrowIcon.classList.add('rotate-90');
+                }
+            };
+
+            // Generate the cards for each principle and hide them initially
+            const allPrinciples = Object.keys(strategiesData);
+            allPrinciples.forEach(principle => {
+                createPrincipleCard(principle, strategiesData[principle]);
+            });
+
+            // Handle button clicks to show/hide content
+            principleButtonsContainer.addEventListener('click', (e) => {
+                const clickedButton = e.target.closest('button');
+                if (!clickedButton) return;
+
+                // Remove active class from all buttons and hide all cards
+                document.querySelectorAll('.principle-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.principle-card').forEach(card => card.classList.add('hidden'));
+                
+                // Add active class to the clicked button and change its card color
+                clickedButton.classList.add('active');
+
+                const principleToShow = clickedButton.getAttribute('data-principle');
+                const cardToShow = document.querySelector(`[data-principle="${principleToShow}"]`);
+                
+                // Show the selected principle content card
+                cardToShow.classList.remove('hidden');
+                cardToShow.style.backgroundColor = principleColors[principleToShow].light;
+            });
+
+            // Show "Focus on Academic Language" by default on page load
+            const initialCard = document.querySelector('[data-principle="Focus on Academic Language"]');
+            initialCard.classList.remove('hidden');
+            initialCard.style.backgroundColor = principleColors["Focus on Academic Language"].light;
+        });
+    </script>
+</body>
+</html>
