@@ -46,12 +46,16 @@
             background-color: #ffffff;
             border-radius: 1rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: background-color 0.4s ease-in-out;
+            transition: all 0.4s ease-in-out;
+        }
+        /* This class will be added by JavaScript to hide cards. */
+        .hide-card {
+            display: none;
         }
         .banner {
             position: relative;
             height: 20rem; /* Adjusted for better mobile and desktop view */
-            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS56ZxsyVQbbOQt_PCKlF-X8NcwJDJPHnu5g&s'); /* REAL CHERRY BLOSSOM IMAGE */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/d/db/Cherry_BLOSSOM_%28Unsplash%29.jpg');
             background-size: cover;
             background-position: center;
             border-radius: 1rem;
@@ -80,6 +84,36 @@
             z-index: 10;
             color: #fff;
             padding: 1rem;
+        }
+        .api-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            margin-top: 0.5rem;
+            color: #590d22ff;
+        }
+        .api-button:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .api-button svg {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.25rem;
+        }
+        .spinner {
+            border: 2px solid #590d22ff;
+            border-radius: 50%;
+            border-top: 2px solid transparent;
+            width: 1rem;
+            height: 1rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -305,6 +339,9 @@
             
             const strategiesContainer = document.getElementById('strategies-container');
             const principleButtonsContainer = document.getElementById('principle-buttons');
+            const apiKey = "";
+            const textApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const ttsApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
 
             const principleColors = {
                 "Focus on Academic Language": { main: "#800f2fff", light: "#ffccd5ff" },
@@ -314,12 +351,222 @@
                 "Build on Background and Interests": { main: "#ff8fa3ff", light: "#ffccd5ff" }
             };
 
+            // Helper function to show a temporary feedback message
+            const showFeedback = (message, isError = false) => {
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.textContent = message;
+                feedbackDiv.className = `fixed bottom-4 right-4 p-3 rounded-lg text-white font-semibold transition-opacity duration-300 z-50 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+                document.body.appendChild(feedbackDiv);
+                setTimeout(() => {
+                    feedbackDiv.style.opacity = '0';
+                    feedbackDiv.addEventListener('transitionend', () => feedbackDiv.remove());
+                }, 3000);
+            };
+
+            // Helper function to convert base64 to ArrayBuffer
+            const base64ToArrayBuffer = (base64) => {
+                const binaryString = window.atob(base64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+            };
+
+            // Helper function to convert PCM audio to WAV blob
+            const pcmToWav = (pcmData, sampleRate) => {
+                const numChannels = 1;
+                const bytesPerSample = 2;
+                const sampleCount = pcmData.length;
+                const byteRate = numChannels * sampleRate * bytesPerSample;
+                const blockAlign = numChannels * bytesPerSample;
+
+                const buffer = new ArrayBuffer(44 + sampleCount * bytesPerSample);
+                const view = new DataView(buffer);
+
+                let offset = 0;
+
+                const writeString = (str) => {
+                    for (let i = 0; i < str.length; i++) {
+                        view.setUint8(offset + i, str.charCodeAt(i));
+                    }
+                    offset += str.length;
+                };
+
+                const writeUint32 = (val) => {
+                    view.setUint32(offset, val, true);
+                    offset += 4;
+                };
+
+                const writeUint16 = (val) => {
+                    view.setUint16(offset, val, true);
+                    offset += 2;
+                };
+
+                // RIFF header
+                writeString('RIFF');
+                writeUint32(36 + sampleCount * bytesPerSample);
+                writeString('WAVE');
+
+                // fmt chunk
+                writeString('fmt ');
+                writeUint32(16);
+                writeUint16(1); // PCM format
+                writeUint16(numChannels);
+                writeUint32(sampleRate);
+                writeUint32(byteRate);
+                writeUint16(blockAlign);
+                writeUint16(16); // bits per sample
+
+                // data chunk
+                writeString('data');
+                writeUint32(sampleCount * bytesPerSample);
+                
+                for (let i = 0; i < sampleCount; i++) {
+                    view.setInt16(offset, pcmData[i], true);
+                    offset += bytesPerSample;
+                }
+
+                return new Blob([view], { type: 'audio/wav' });
+            };
+
+            // Function to play audio from base64 data
+            const playAudio = (base64Data, mimeType) => {
+                try {
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    if (!sampleRateMatch || sampleRateMatch.length < 2) {
+                        showFeedback('Error: Could not determine sample rate from mime type.', true);
+                        return;
+                    }
+                    const sampleRate = parseInt(sampleRateMatch[1], 10);
+                    const pcmData = base64ToArrayBuffer(base64Data);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+                    audio.onended = () => {
+                        URL.revokeObjectURL(audioUrl);
+                    };
+                } catch (error) {
+                    showFeedback('Failed to play audio.', true);
+                    console.error('Audio playback error:', error);
+                }
+            };
+
+            // Function to read glossary definition aloud using Gemini API
+            const readGlossaryAloud = async (strategy, button) => {
+                const text = glossaryData[strategy];
+                if (!text) {
+                    showFeedback('Glossary definition not found.', true);
+                    return;
+                }
+                button.innerHTML = `<div class="spinner border-white border-t-transparent"></div>`;
+                button.disabled = true;
+
+                try {
+                    const payload = {
+                        contents: [{
+                            parts: [{ text: `Say the following text in a friendly and informative tone: "${text}"` }]
+                        }],
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: {
+                                voiceConfig: {
+                                    prebuiltVoiceConfig: { voiceName: "Rasalgethi" }
+                                }
+                            }
+                        },
+                        model: "gemini-2.5-flash-preview-tts"
+                    };
+
+                    const response = await fetch(ttsApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`TTS API error: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    const part = result?.candidates?.[0]?.content?.parts?.[0];
+                    const audioData = part?.inlineData?.data;
+                    const mimeType = part?.inlineData?.mimeType;
+
+                    if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                        playAudio(audioData, mimeType);
+                    } else {
+                        throw new Error('Invalid audio data received from API');
+                    }
+                } catch (error) {
+                    console.error('Error in readGlossaryAloud:', error);
+                    showFeedback(`Failed to read aloud: ${error.message}`, true);
+                } finally {
+                    button.innerHTML = `🔊 Read Aloud`;
+                    button.disabled = false;
+                }
+            };
+            
+            // Function to generate a classroom example using Gemini API
+            const generateExample = async (strategy, exampleContainer, button) => {
+                const definition = glossaryData[strategy];
+                if (!definition) {
+                    showFeedback('Glossary definition not found.', true);
+                    return;
+                }
+
+                button.innerHTML = `<div class="spinner border-white border-t-transparent"></div>`;
+                button.disabled = true;
+                exampleContainer.innerHTML = '';
+                exampleContainer.style.display = 'block';
+
+                try {
+                    const payload = {
+                        contents: [{
+                            parts: [{ text: `Act as an expert educational strategist for English Language Learners. Create a realistic and concrete classroom example for the following teaching strategy. The example should be a single paragraph, use simple language, and provide a clear, actionable scenario.
+                            
+                            Strategy: ${strategy}
+                            Definition: ${definition}
+                            
+                            Example:` }]
+                        }]
+                    };
+
+                    const response = await fetch(textApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API error: ${errorData.error.message}`);
+                    }
+
+                    const result = await response.json();
+                    const generatedText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "No example could be generated at this time.";
+                    exampleContainer.innerHTML = `<p>${generatedText}</p>`;
+                } catch (error) {
+                    console.error('Error in generateExample:', error);
+                    exampleContainer.innerHTML = `<p class="text-red-500">Failed to generate an example. Please try again. (${error.message})</p>`;
+                } finally {
+                    button.innerHTML = `✨ AI Example`;
+                    button.disabled = false;
+                }
+            };
+
             // Function to create a principle card
             const createPrincipleCard = (principle, strategies) => {
                 const card = document.createElement('div');
-                card.className = 'principle-card p-6 mb-6';
+                card.className = 'principle-card p-6 mb-6'; 
                 card.setAttribute('data-principle', principle);
                 card.setAttribute('data-main-color', principleColors[principle].main);
+                
+                // Add the specific background color for the card
+                card.style.backgroundColor = principleColors[principle].light;
 
                 const title = document.createElement('h2');
                 title.className = 'text-xl md:text-2xl font-semibold mb-4';
@@ -362,59 +609,89 @@
 
             // Function to toggle the glossary content
             const toggleGlossary = (strategy, element) => {
-                const glossaryContent = element.nextElementSibling;
+                const existingGlossaryContent = element.nextElementSibling;
                 const arrowIcon = element.querySelector('svg');
                 const principle = element.closest('.principle-card').getAttribute('data-principle');
                 const mainColor = principleColors[principle].main;
                 const lightColor = principleColors[principle].light;
 
-                if (glossaryContent && glossaryContent.classList.contains('glossary-content')) {
-                    glossaryContent.style.display = glossaryContent.style.display === 'block' ? 'none' : 'block';
+                if (existingGlossaryContent && existingGlossaryContent.classList.contains('glossary-content')) {
+                    existingGlossaryContent.style.display = existingGlossaryContent.style.display === 'block' ? 'none' : 'block';
                     arrowIcon.classList.toggle('rotate-90');
                 } else {
                     const newGlossaryContent = document.createElement('div');
                     newGlossaryContent.className = 'glossary-content rounded-lg';
                     newGlossaryContent.style.borderColor = mainColor;
                     newGlossaryContent.style.backgroundColor = lightColor;
-                    newGlossaryContent.innerHTML = `<p>${glossaryData[strategy]}</p>`;
+                    newGlossaryContent.innerHTML = `
+                        <p>${glossaryData[strategy]}</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <button class="api-button" style="background-color: ${mainColor}; color: white;">✨ AI Example</button>
+                            <button class="api-button" style="background-color: ${mainColor}; color: white;">🔊 Read Aloud</button>
+                        </div>
+                        <div class="mt-4 p-4 rounded-lg border-2 border-dashed" style="border-color: ${mainColor}; display: none;">
+                            <p class="font-semibold text-sm" style="color: ${mainColor};">Example:</p>
+                            <div class="mt-2 text-sm example-content"></div>
+                        </div>
+                    `;
                     element.parentNode.insertBefore(newGlossaryContent, element.nextSibling);
                     newGlossaryContent.style.display = 'block';
                     arrowIcon.classList.add('rotate-90');
+
+                    const exampleButton = newGlossaryContent.querySelector('.api-button:nth-of-type(1)');
+                    const ttsButton = newGlossaryContent.querySelector('.api-button:nth-of-type(2)');
+                    const exampleContainer = newGlossaryContent.querySelector('.example-content');
+                    
+                    exampleButton.addEventListener('click', () => {
+                        newGlossaryContent.querySelector('.border-dashed').style.display = 'block';
+                        generateExample(strategy, exampleContainer, exampleButton);
+                    });
+                    
+                    ttsButton.addEventListener('click', () => {
+                        readGlossaryAloud(strategy, ttsButton);
+                    });
                 }
             };
 
-            // Generate the cards for each principle and hide them initially
+            // Generate all the cards
             const allPrinciples = Object.keys(strategiesData);
             allPrinciples.forEach(principle => {
                 createPrincipleCard(principle, strategiesData[principle]);
             });
 
-            // Handle button clicks to show/hide content
-            principleButtonsContainer.addEventListener('click', (e) => {
-                const clickedButton = e.target.closest('button');
-                if (!clickedButton) return;
+            // After generating all cards, handle the initial display and button functionality
+            const cards = document.querySelectorAll('.principle-card');
+            const buttons = document.querySelectorAll('.principle-button');
 
-                // Remove active class from all buttons and hide all cards
-                document.querySelectorAll('.principle-button').forEach(btn => btn.classList.remove('active'));
-                document.querySelectorAll('.principle-card').forEach(card => card.classList.add('hidden'));
-                
-                // Add active class to the clicked button and change its card color
-                clickedButton.classList.add('active');
-
-                const principleToShow = clickedButton.getAttribute('data-principle');
-                const cardToShow = document.querySelector(`[data-principle="${principleToShow}"]`);
-                
-                // Show the selected principle content card
-                cardToShow.classList.remove('hidden');
-                cardToShow.style.backgroundColor = principleColors[principleToShow].light;
+            // Initial setup: hide all cards except the first one
+            cards.forEach((card, index) => {
+                if (index !== 0) {
+                    card.classList.add('hide-card');
+                }
             });
 
-            // Show "Focus on Academic Language" by default on page load
-            const initialCard = document.querySelector('[data-principle="Focus on Academic Language"]');
-            initialCard.classList.remove('hidden');
-            initialCard.style.backgroundColor = principleColors["Focus on Academic Language"].light;
+            // Handle button clicks to show/hide content
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const principleToShow = button.getAttribute('data-principle');
+
+                    // Remove active class from all buttons
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to the clicked button
+                    button.classList.add('active');
+
+                    // Hide all cards
+                    cards.forEach(card => card.classList.add('hide-card'));
+
+                    // Show the selected card
+                    const cardToShow = document.querySelector(`[data-principle="${principleToShow}"]`);
+                    if (cardToShow) {
+                        cardToShow.classList.remove('hide-card');
+                    }
+                });
+            });
         });
     </script>
 </body>
 </html>
-
