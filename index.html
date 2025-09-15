@@ -124,7 +124,7 @@
         <div class="banner">
             <div class="banner-content">
                 <h1 class="text-6xl md:text-7xl font-bold mb-2">Strategies for English Language Learners</h1>
-                <p class="text-lg">Research-based tools that support ALL learners.</p>
+                <p class="text-lg">A categorized list of strategies to support ELLs in the classroom.</p>
             </div>
         </div>
         <div class="flex flex-col md:flex-row md:justify-center items-center mb-6 space-y-4 md:space-y-0 md:space-x-4">
@@ -134,6 +134,7 @@
                     <option value="All Strategies">All Strategies</option>
                     <option value="Teacher-Centered">Teacher-Centered</option>
                     <option value="Student-Centered">Student-Centered</option>
+                    <option value="Vocabulary">Vocabulary</option>
                 </select>
             </div>
             <div class="flex items-center space-x-2 w-full md:w-auto">
@@ -151,34 +152,52 @@
         document.addEventListener('DOMContentLoaded', () => {
 
             const teacherCentered = [
-                "Anticipation Guides", "Cloze Passages", "Dictations", "Directed Reading/Thinking (DRTA)", "Guided Reading",
-                "Listen and Point", "Model Academic Language", "Picture Walk", "Shared Reading", "Shared Writing",
-                "Structured Note-Taking", "Teach the Text Backward", "Teacher Read Aloud", "Teacher Talk", "Total Physical Response",
-                "Wait Time", "Wait Time Two"
+                "Anticipation Guides", "Cloze Passages", "Dictations", "Directed Reading/Thinking (DRTA)", "Guided Imagery",
+                "Guided Reading", "Listen and Point", "Listen-Read-Discuss", "Model Academic Language", "Picture Walk",
+                "Shared Reading", "Shared Writing", "Structured Note-Taking", "Teach the Text Backward", "Teacher Read Aloud",
+                "Teacher Talk", "Think Alouds", "Total Physical Response", "Wait Time", "Wait Time Two"
             ].sort();
             
             const studentCenteredAndCollaborative = [
                 "4 to 1", "Act It Out", "Brainstorming", "Choral Reading", "Closed Sort Tasks", "Cognates", "Collaborative Dialogues",
                 "Concept/Idea Maps", "Content Learning Logs", "Contextualize Language", "Cornell Notes", "Dialogue Journals", "Exit Slips", "Field Trips", "First Language Support", "Fish Bowl", "Four Corners", "Give One - Get One",
-                "Graphic Organizers", "Graphic Organizers for Writing", "H Charts", "Hand-on Activities", "Headbands",
+                "Graphic Features", "Graphic Organizers", "Graphic Organizers for Writing", "H Charts", "Hand-on Activities", "Headbands",
                 "I Have... Who Has...?", "Information Gap", "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "K-W-L Chart",
                 "Language Experience Approach (LEA)", "Line Up", "Memory Lane", "Mix and Match", "One-Word", "One-Word Sentences", "Open Sort Tasks",
                 "Paraphrase Passport", "Patterned Oral Language", "Peer-Assisted Learning Strategies (PALS)", "Picture Word Inductive Model",
-                "Question-Answer Relationships (QAR)", "Quickwrites", "Reader's Theatre", "Reciprocal Teaching", "Report Frames", "Role Play", "Roving Charts",
+                "Plus/Delta Chart", "Posters", "Question-Answer Relationships (QAR)", "Quickwrites", "RallyCoach", "Reader's Theatre",
+                "Reading Logs", "Reciprocal Teaching", "Report Frames", "Role Play", "Roving Charts", "Say Something",
                 "Self-Assessment Scales for Vocabulary Learning", "Sentence-Picture Match", "Snowball", "Stir the Class", "Story Maps",
                 "Strategy Cards", "Symbolic Storyboarding", "T Charts", "Tableaux", "Text to Graphics and Back Again", "Think-Pair-Share",
                 "Think-Pair-Share Squared", "Think-Write-Pair-Share", "Ticket to Leave", "Turn and Talk", "Varied Grouping Formats", "Varied Questioning Formats",
-                "Wordless Picture Books", "Word Walls", "Word/Picture Banks", "Write a Letter"
+                "Wordless Picture Books", "Word Walls", "Word/Picture Banks", "Write a Letter", "Writer's Workshop"
+            ].sort();
+
+            const vocabularyStrategies = [
+                "Analogies", "Character Trait Maps", "Click and Clunk", "Concept Definition Mapping", "Connect-Two",
+                "Contextual Redefinition", "Find Someone Who", "Four-Dimensional Word Study", "4-Square Vocabulary Approach",
+                "Frayer Model", "Interactive Word Wall", "Magnetic Reading", "Memory Box", "My Favorite Word",
+                "Personal Dictionaries", "Semantic Feature Analysis", "Semantic Mapping", "Word Map", "Word Sorts"
             ].sort();
 
             const categorizedStrategies = {
                 "Teacher-Centered": teacherCentered,
-                "Student-Centered": studentCenteredAndCollaborative
+                "Student-Centered": studentCenteredAndCollaborative,
+                "Vocabulary": vocabularyStrategies
             };
             
             const allStrategies = Object.values(categorizedStrategies).flat().sort();
 
             const glossaryData = {
+                "Analogies": "A strategy where students make connections between new vocabulary words and familiar concepts, helping them infer meaning and build understanding of complex relationships.",
+                "Character Trait Maps": "A visual tool used to help students analyze and describe a character in a text. Students write the character's name in the center and use branches to list various traits with supporting evidence.",
+                "Click and Clunk": "A metacognitive strategy that teaches students to monitor their comprehension while reading. When they understand a word or phrase, it 'clicks.' When they don't, it 'clunks,' and they use a fix-up strategy.",
+                "Concept Definition Mapping": "A graphic organizer that helps students understand new concepts by defining them, providing examples and non-examples, and relating them to a superordinate category.",
+                "Connect-Two": "A quick activity where students are given two related words and must explain the connection between them. This helps them synthesize information and see relationships between key terms.",
+                "Contextual Redefinition": "A strategy where students work in groups to predict the meaning of a new word using its context. After group discussion, the teacher provides the correct definition, and students re-evaluate their predictions.",
+                "Find Someone Who": "A collaborative activity where students walk around the classroom asking their peers questions related to a topic. The goal is to find a different person who can answer each question and write their name down.",
+                "Four-Dimensional Word Study": "A multi-faceted approach to vocabulary instruction that focuses on four key areas: spelling, word meaning, word structure, and word usage. This provides a deep and comprehensive understanding of new words.",
+                "4-Square Vocabulary Approach": "A graphic organizer that helps students deeply process new vocabulary words. The four squares include the word, its definition, an image or symbol, and a sentence using the word.",
                 "4 to 1": "A strategy for summarizing a text. Students identify four key concepts, four key details, four key vocabulary words, and one main idea.",
                 "Act It Out": "A kinesthetic strategy where students physically act out a concept or vocabulary word to demonstrate understanding. It is especially effective for verbs and abstract concepts.",
                 "Anticipation Guides": "A pre-reading activity where students agree or disagree with a series of statements related to the text they are about to read. This activates prior knowledge and sets a purpose for reading.",
@@ -200,9 +219,12 @@
                 "First Language Support": "The practice of allowing or encouraging students to use their native language to support their understanding of content. It can be used for brainstorming, note-taking, or clarifying concepts.",
                 "Fish Bowl": "A cooperative learning strategy where a small group of students discusses a topic in a circle while the rest of the class sits in a larger circle and observes. This models effective discussion techniques.",
                 "Four Corners": "A kinesthetic discussion strategy where students move to a designated corner of the room that corresponds to a statement of opinion or a response to a question. This promotes movement and engagement.",
+                "Frayer Model": "A graphic organizer for building vocabulary. It has four sections: a definition, characteristics, examples, and non-examples.",
                 "Give One - Get One": "A collaborative strategy where students walk around the room and exchange information with a partner. Each student 'gives' an idea they have and 'gets' an idea they don't have. It encourages peer interaction and review.",
+                "Graphic Features": "Focuses on teaching students to use non-text features like headings, charts, graphs, and illustrations to understand content.",
                 "Graphic Organizers": "A visual tool that helps students organize information, such as a Venn diagram, a T-chart, or a concept map. It makes relationships between ideas more explicit and accessible.",
                 "Graphic Organizers for Writing": "Visual tools specifically designed to help students pre-write and plan their compositions. Examples include story maps, plot diagrams, and report frames.",
+                "Guided Imagery": "The teacher guides students through a mental journey or visualization to help them understand a concept or story.",
                 "Guided Reading": "A small-group reading instruction strategy where the teacher works with students who read at a similar level. The teacher provides support and guidance as students read a new text.",
                 "H Charts": "A graphic organizer with an H-shape, used to compare and contrast two concepts. The left column is for the first concept, the right for the second, and the middle is for similarities.",
                 "Hand-on Activities": "An instructional strategy that allows students to learn by doing. These activities require students to manipulate physical objects to understand a concept.",
@@ -210,31 +232,44 @@
                 "I Have... Who Has...?": "A chain-reaction game where each student has a card with a question and an answer. The game begins with a student reading their 'Who has...?' question, and the student with the correct answer on their card responds with 'I have...' It is excellent for reviewing content.",
                 "Information Gap": "A collaborative activity where students work in pairs to share information. Each student has a piece of information that the other needs to complete a task. It promotes authentic communication.",
                 "Inside Outside Circle": "A kinesthetic discussion strategy where half the students form an inner circle and the other half form an outer circle. Students rotate to talk with a new partner. This provides opportunities for many short conversations.",
+                "Interactive Word Wall": "A collaborative word wall where students can add words, definitions, and images as they learn new vocabulary.",
                 "Jigsaw Reading": "A collaborative reading strategy where a text is broken into smaller sections. Each student in a group reads a different section, then teaches it to the others. This promotes interdependence and deep comprehension.",
                 "K-W-L Chart": "A graphic organizer used to activate prior knowledge and set a purpose for learning. Students write what they **K**now, what they **W**ant to know, and what they **L**earned.",
                 "Key Sentence Frames": "Sentence structures provided by the teacher to help students formulate their thoughts and responses. These scaffolds reduce the cognitive load of producing grammatically correct sentences.",
                 "Language Experience Approach (LEA)": "A reading and writing strategy based on students' oral language. The teacher transcribes a story that the student dictates, which then becomes the reading material. It connects language with personal experiences.",
                 "Line Up": "A kinesthetic strategy where students arrange themselves in a line based on a characteristic, such as birthday, height, or a spectrum of opinion. It promotes movement and conversation.",
                 "Listen and Point": "A listening comprehension strategy where students point to a word or picture on a page as the teacher reads it. This provides a low-stakes way to assess listening skills and build vocabulary.",
+                "Listen-Read-Discuss": "Students first listen to a text, then read it independently, and finally discuss it in small groups.",
+                "Magnetic Reading": "A strategy where teachers use a whiteboard and magnets with words or letters to model reading and spelling.",
+                "Memory Box": "A personalized box where students collect objects, pictures, or notes related to a topic to help them recall information.",
                 "Memory Lane": "A game where students recall and share what they remember about a previous topic. This is a simple and effective way to review and connect old and new learning.",
                 "Mix and Match": "A vocabulary strategy where students match a term with its definition or an image. This can be done with cards, on a worksheet, or as a group activity.",
                 "Model Academic Language": "The practice of using and explicitly teaching the precise vocabulary and grammatical structures of academic subjects. The teacher models how to talk and write like an expert in a field.",
+                "My Favorite Word": "A vocabulary activity where students choose a new word they like and share its meaning and why they like it with the class.",
                 "One-Word": "A quick-write strategy where students respond to a prompt using a single word. It is a simple way to activate thinking and can be a springboard for further discussion.",
                 "One-Word Sentences": "An oral language strategy where students are prompted to use a single, specific word to describe or respond to something. It is a scaffold for speaking.",
                 "Open Sort Tasks": "A vocabulary strategy where students are given a list of words or concepts and asked to create their own categories to sort them into. This requires higher-order thinking and understanding of relationships.",
                 "Paraphrase Passport": "A strategy where a student must orally paraphrase a new concept to a partner before being allowed to 'pass' to the next task or activity. This ensures they have processed the information.",
                 "Patterned Oral Language": "The practice of using predictable sentence patterns to help students practice new vocabulary and grammatical structures. The teacher models the pattern, and students fill in the blanks.",
                 "Peer-Assisted Learning Strategies (PALS)": "A structured cooperative learning strategy where students work in pairs to help each other learn. One student is the 'coach' and the other is the 'reader' or 'writer.'",
+                "Personal Dictionaries": "Students create and maintain their own dictionaries with words they are learning, often with definitions, sentences, and illustrations.",
                 "Picture Walk": "A pre-reading strategy where students look through the pictures in a book with the teacher and discuss what they see. This builds background knowledge and helps them make predictions.",
                 "Picture Word Inductive Model": "A literacy strategy where students identify objects in a picture, and the teacher writes the words underneath. This helps them connect spoken words to their written form.",
+                "Plus/Delta Chart": "A reflective tool where students list what worked well (**Plus**) and what needs to be improved (**Delta**) in an activity or lesson.",
+                "Posters": "A collaborative project where students create a poster to visually represent a concept, a story, or key information from a text.",
                 "Question-Answer Relationships (QAR)": "A reading comprehension strategy that teaches students to differentiate between questions that are answered 'right there' in the text, those that require 'think and search,' and those that are 'on my own' (from background knowledge).",
                 "Quickwrites": "A short, timed writing activity where students write for a set period without worrying about grammar or spelling. It is a way to generate ideas and increase fluency.",
+                "RallyCoach": "A cooperative learning structure where students work in pairs. One student performs a task, and the other coaches them, then they switch roles.",
                 "Reader's Theatre": "A dramatic reading of a story or script. Students read from their scripts and use their voices and gestures to portray characters. It builds fluency and comprehension.",
+                "Reading Logs": "A journal where students record their reading, summarize what they read, and respond to prompts about the text.",
                 "Reciprocal Teaching": "A collaborative reading strategy where students take turns leading a group discussion about a text using four key skills: summarizing, questioning, clarifying, and predicting. It fosters active comprehension.",
                 "Report Frames": "A writing scaffold that provides students with a structure for a report, with headings and sentence starters to guide their writing. It reduces the cognitive load of organizing a text.",
                 "Role Play": "A kinesthetic strategy where students take on the roles of characters or professionals to act out a scene or a real-world scenario. This provides authentic language practice.",
                 "Roving Charts": "A collaborative brainstorming strategy where large pieces of paper are placed around the room with different topics. Students move from chart to chart, adding ideas to each one.",
+                "Say Something": "A collaborative reading strategy where pairs of students read a text and pause at pre-determined points to 'say something' about what they're reading.",
                 "Self-Assessment Scales for Vocabulary Learning": "A strategy where students use a rating scale to assess their own knowledge of new vocabulary words. This helps them monitor their own learning and set goals.",
+                "Semantic Feature Analysis": "A graphic organizer that helps students compare and contrast vocabulary words by their shared and unique characteristics.",
+                "Semantic Mapping": "A visual strategy where students brainstorm related concepts and ideas around a central word, creating a web of connected terms.",
                 "Sentence-Picture Match": "A vocabulary or comprehension activity where students match a sentence to a corresponding picture. This connects written language to visual representation.",
                 "Shared Reading": "A whole-group reading strategy where the teacher reads a text aloud to the students, who follow along in their own copies. It models fluent reading and builds comprehension.",
                 "Shared Writing": "A collaborative writing strategy where the teacher and students compose a text together. The teacher acts as the scribe, writing down the students' ideas. This models the writing process.",
@@ -250,6 +285,7 @@
                 "Teacher Read Aloud": "A strategy where the teacher reads a text aloud to students, modeling fluent reading and engaging them in the story. It exposes students to new vocabulary and language structures.",
                 "Teacher Talk": "The practice of being mindful of one's own speech when teaching, such as using simple language, clear pronunciation, and intentional repetition to make content more accessible to ELLs.",
                 "Text to Graphics and Back Again": "A strategy where students transform a written text into a graphic organizer or visual representation, and then use that graphic to write a new text. This deepens understanding.",
+                "Think Alouds": "A metacognitive strategy where the teacher verbalizes their thoughts and thinking process while reading a text, modeling how to make meaning.",
                 "Think-Pair-Share": "A collaborative strategy where students first think individually about a question, then pair up with a partner to discuss their thoughts, and finally share their ideas with the whole class.",
                 "Think-Pair-Share Squared": "An extension of Think-Pair-Share where after the initial partner discussion, the pair joins another pair to form a group of four to discuss their ideas. This allows for more complex conversations.",
                 "Think-Write-Pair-Share": "A writing-focused variation of Think-Pair-Share where students first write their thoughts, then discuss them with a partner, and finally share with the group.",
@@ -260,10 +296,13 @@
                 "Varied Questioning Formats": "The practice of using different types of questions (e.g., yes/no, multiple choice, open-ended) to check for understanding and promote deeper thinking.",
                 "Wait Time": "The intentional pause after asking a question before calling on a student to answer. This provides time for students to formulate a response.",
                 "Wait Time Two": "The intentional pause after a student has finished speaking. This allows the student to elaborate and gives other students time to process what was said before the conversation continues.",
+                "Word Map": "A graphic organizer used to define a new word by including its definition, synonyms, antonyms, and a sentence.",
+                "Word Sorts": "A vocabulary activity where students sort words into categories based on a common feature, such as spelling patterns or meaning.",
                 "Word Walls": "A classroom display of high-frequency words, academic vocabulary, or content-specific terms. It serves as a visual reference for students during reading and writing.",
                 "Word/Picture Banks": "A visual and linguistic resource for students, consisting of a collection of key words and corresponding pictures, used to support reading and writing activities.",
                 "Wordless Picture Books": "A type of book that tells a story through illustrations alone. Students can use them to practice retelling skills and to build narrative language.",
-                "Write a Letter": "A writing strategy where students write a letter to the teacher, a classmate, or a fictional character about a topic. This provides an authentic and personal context for writing practice."
+                "Write a Letter": "A writing strategy where students write a letter to the teacher, a classmate, or a fictional character about a topic. This provides an authentic and personal context for writing practice.",
+                "Writer's Workshop": "A structured block of time for writing instruction, where students work on their own writing projects while the teacher holds individual conferences and provides mini-lessons."
             };
 
             const strategiesContainer = document.getElementById('strategies-container');
