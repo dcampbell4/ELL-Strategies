@@ -124,7 +124,7 @@
         <div class="banner">
             <div class="banner-content">
                 <h1 class="text-6xl md:text-7xl font-bold mb-2">Strategies for English Language Learners</h1>
-                <p class="text-lg">Simple, research-based tools to better support ALL learners.</p>
+                <p class="text-lg">Simple, research-based tools to support ALL learners.</p>
             </div>
         </div>
         <div class="flex flex-col md:flex-row md:justify-center items-center mb-6 space-y-4 md:space-y-0 md:space-x-4">
@@ -308,7 +308,7 @@
             const strategiesContainer = document.getElementById('strategies-container');
             const filterDropdown = document.getElementById('category-filter');
             const topicInput = document.getElementById('topic-input');
-
+            
             function renderStrategies(filterKey) {
                 strategiesContainer.innerHTML = ''; // Clear previous content
 
@@ -370,7 +370,6 @@
                                 if (topic) {
                                     generateLessonActivity(strategyName, topic, generateActivityButton, exampleOutput);
                                 } else {
-                                    // Replace alert with a more user-friendly message
                                     exampleOutput.innerHTML = '<p class="text-red-500">Please enter a topic first!</p>';
                                 }
                             });
@@ -382,15 +381,7 @@
                 strategiesContainer.appendChild(card);
             }
 
-            async function generateLessonActivity(strategyName, topic, button, outputDiv) {
-                const originalButtonText = button.innerHTML;
-                
-                button.innerHTML = `<span class="spinner inline-block mr-2"></span> Planning...`;
-                button.disabled = true;
-                outputDiv.innerHTML = '';
-
-                const systemPrompt = "You are an expert teacher and curriculum developer. Your task is to create a brief, actionable lesson plan activity. Do not include a full lesson plan; focus on a single activity. The response should be a concise paragraph that includes the strategy, the topic, and the steps for the activity. Use clear and encouraging language.";
-                const userQuery = `Create a classroom activity for the strategy "${strategyName}" on the topic of "${topic}".`;
+            async function geminiCall(systemPrompt, userQuery) {
                 const apiKey = "";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
@@ -424,7 +415,7 @@
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
 
-                        break;
+                        return await response.json();
                     } catch (error) {
                         console.error('Fetch error:', error);
                         const delay = baseDelay * Math.pow(2, retries);
@@ -432,28 +423,73 @@
                         await new Promise(res => setTimeout(res, delay));
                     }
                 }
+                throw new Error("Failed to connect to API after multiple retries.");
+            }
 
-                if (!response || !response.ok) {
-                    outputDiv.innerHTML = '<p class="text-red-500">Failed to generate activity. Please try again later.</p>';
-                    button.innerHTML = originalButtonText;
-                    button.disabled = false;
-                    return;
-                }
+            async function generateLessonActivity(strategyName, topic, button, outputDiv) {
+                const originalButtonText = button.innerHTML;
+                
+                button.innerHTML = `<span class="spinner inline-block mr-2"></span> Planning...`;
+                button.disabled = true;
+                outputDiv.innerHTML = '';
+
+                const systemPrompt = "You are an expert teacher and curriculum developer. Your task is to create a brief, actionable lesson plan activity. Do not include a full lesson plan; focus on a single activity. The response should be a concise paragraph that includes the strategy, the topic, and the steps for the activity. Use clear and encouraging language.";
+                const userQuery = `Create a classroom activity for the strategy "${strategyName}" on the topic of "${topic}".`;
 
                 try {
-                    button.innerHTML = `<span class="spinner inline-block mr-2"></span> Generating...`;
-
-                    const result = await response.json();
+                    const result = await geminiCall(systemPrompt, userQuery);
                     const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 
                     if (text) {
                         outputDiv.innerHTML = `<p class="text-gray-700">${text}</p>`;
+                        
+                        // Dynamically add a highlight button
+                        const highlightButton = document.createElement('button');
+                        highlightButton.className = 'api-button mt-4 bg-purple-200 hover:bg-purple-300';
+                        highlightButton.innerHTML = `<span class="inline-block mr-1">✨</span>Highlight Learning Goal`;
+                        outputDiv.appendChild(highlightButton);
+
+                        const highlightOutput = document.createElement('div');
+                        highlightOutput.className = 'mt-4 text-purple-600';
+                        outputDiv.appendChild(highlightOutput);
+                        
+                        highlightButton.addEventListener('click', () => {
+                            highlightLearningGoal(text, highlightButton, highlightOutput);
+                        });
+
                     } else {
                         outputDiv.innerHTML = '<p class="text-gray-700">No activity could be generated.</p>';
                     }
                 } catch (error) {
-                    console.error('Error parsing JSON or extracting text:', error);
-                    outputDiv.innerHTML = '<p class="text-red-500">An error occurred while processing the response.</p>';
+                    console.error('Error generating activity:', error);
+                    outputDiv.innerHTML = '<p class="text-red-500">Failed to generate activity. Please try again later.</p>';
+                } finally {
+                    button.innerHTML = originalButtonText;
+                    button.disabled = false;
+                }
+            }
+
+            async function highlightLearningGoal(textToAnalyze, button, outputDiv) {
+                const originalButtonText = button.innerHTML;
+                button.innerHTML = `<span class="spinner inline-block mr-2"></span> Highlighting...`;
+                button.disabled = true;
+                outputDiv.innerHTML = '';
+
+                const systemPrompt = "You are an expert curriculum designer. Based on the following classroom activity, state the primary student learning goal in a single, clear, and concise sentence. Focus on what the student will be able to do or understand.";
+                const userQuery = `Activity: ${textToAnalyze}`;
+
+                try {
+                    const result = await geminiCall(systemPrompt, userQuery);
+                    const goal = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                    if (goal) {
+                        outputDiv.innerHTML = `<p class="text-gray-700 font-bold">Learning Goal: ${goal}</p>`;
+                    } else {
+                        outputDiv.innerHTML = '<p class="text-red-500">Could not identify a learning goal.</p>';
+                    }
+                } catch (error) {
+                    console.error('Error highlighting learning goal:', error);
+                    outputDiv.innerHTML = '<p class="text-red-500">An error occurred while generating the learning goal.</p>';
                 } finally {
                     button.innerHTML = originalButtonText;
                     button.disabled = false;
@@ -469,4 +505,3 @@
     </script>
 </body>
 </html>
-
