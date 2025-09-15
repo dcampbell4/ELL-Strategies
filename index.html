@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ELL Strategies</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -15,11 +15,6 @@
         }
         .container {
             max-width: 800px;
-        }
-        .principle-button {
-            transition: all 0.2s ease-in-out;
-            border: 2px solid transparent;
-            color: #fff;
         }
         .strategy-item {
             cursor: pointer;
@@ -42,7 +37,7 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .principle-card {
+        .strategy-list-card {
             background-color: #ffffff;
             border-radius: 1rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -80,6 +75,9 @@
             color: #fff;
             padding: 1rem;
         }
+        .banner-content h1 {
+            font-family: 'Caveat', cursive;
+        }
         .api-button {
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
@@ -95,12 +93,10 @@
         .api-button:hover {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        .api-button span.emoji {
+        .api-button svg {
             display: inline-block;
             vertical-align: middle;
             margin-right: 0.25rem;
-            font-size: 1.25rem; /* Larger emoji size for better visibility */
-            line-height: 1;
         }
         .spinner {
             border: 2px solid #590d22ff;
@@ -113,13 +109,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        .sticky-banner {
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            background-color: #fff0f3ff;
-            padding: 1rem 0;
         }
         .arrow {
             transition: transform 0.2s ease-in-out;
@@ -134,19 +123,23 @@
     <div class="container mx-auto">
         <div class="banner">
             <div class="banner-content">
-                <h1 class="text-3xl md:text-4xl font-bold mb-2">Strategies for English Language Learners</h1>
-                <p class="text-lg">These research-based best practices can help you support language learners.</p>
+                <h1 class="text-6xl md:text-7xl font-bold mb-2">Strategies for English Language Learners</h1>
+                <p class="text-lg">Research-based tools that support ALL learners.</p>
             </div>
         </div>
-    </div>
-
-    <div class="sticky-banner">
-        <div id="principle-buttons" class="container mx-auto flex flex-wrap justify-center gap-4">
-            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Focus on Academic Language" style="background-color: #800f2fff;">Focus on Academic Language</button>
-            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Make Content Comprehensible" style="background-color: #c9184aff;">Make Content Comprehensible</button>
-            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Provide Scaffolding for Learning" style="background-color: #ff4d6dff;">Provide Scaffolding for Learning</button>
-            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Integrate Content and Language Learning" style="background-color: #ff758fff;">Integrate Content and Language Learning</button>
-            <button class="principle-button px-4 py-2 rounded-full font-medium shadow-md transition-all" data-principle="Build on Background and Interests" style="background-color: #ff8fa3ff;">Build on Background and Interests</button>
+        <div class="flex flex-col md:flex-row md:justify-center items-center mb-6 space-y-4 md:space-y-0 md:space-x-4">
+            <div class="flex items-center space-x-2">
+                <label for="category-filter" class="font-semibold">Filter by Type:</label>
+                <select id="category-filter" class="rounded-full px-4 py-2 border-2 border-pink-500 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    <option value="All Strategies">All Strategies</option>
+                    <option value="Teacher-Centered">Teacher-Centered</option>
+                    <option value="Student-Centered">Student-Centered</option>
+                </select>
+            </div>
+            <div class="flex items-center space-x-2 w-full md:w-auto">
+                <label for="topic-input" class="font-semibold">Topic:</label>
+                <input type="text" id="topic-input" placeholder="e.g., Photosynthesis" class="flex-grow rounded-full px-4 py-2 border-2 border-pink-500 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500" />
+            </div>
         </div>
     </div>
 
@@ -157,115 +150,33 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            const strategiesData = {
-                "Focus on Academic Language": {
-                    "Primary Strategies": [
-                        "4 to 1", "Anticipation Guides", "Choral Reading", "Closed Sort Tasks", "Cloze Passages", "Cognates",
-                        "Collaborative Dialogues", "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
-                        "Graphic Organizers", "Graphic Organizers for Writing", "Guided Reading", "H Charts", "Information Gap",
-                        "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "Language Experience Approach (LEA)",
-                        "Mix and Match", "Model Academic Language", "Open Sort Tasks", "Peer-Assisted Learning Strategies (PALS)",
-                        "Paraphrase Passport", "Picture Walk", "Question-Answer Relationships (QAR)", "Reader's Theatre",
-                        "Reciprocal Teaching", "Report Frames", "Shared Reading", "Shared Writing", "Story Maps", "Teach the Text Backward",
-                        "Teacher Read Aloud", "Text to Graphics and Back Again", "Think-Write-Pair-Share", "Word/Picture Banks",
-                        "Write a Letter"
-                    ],
-                    "Additional Strategies": [
-                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
-                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
-                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
-                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
-                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
-                    ]
-                },
-                "Make Content Comprehensible": {
-                    "Primary Strategies": [
-                        "Contextualize Language", "Key Sentence Frames", "Model Academic Language", "Peer-Assisted Learning Strategies (PALS)",
-                        "Picture Walk", "Question-Answer Relationships (QAR)", "Reciprocal Teaching", "Shared Reading",
-                        "Shared Writing", "Structured Note-Taking", "Teacher Read Aloud", "Text to Graphics and Back Again",
-                        "Think-Write-Pair-Share", "Word/Picture Banks", "H Charts", "Give One - Get One", "I Have... Who Has...?",
-                        "Wait Time", "Wait Time Two"
-                    ],
-                    "Additional Strategies": [
-                        "Act It Out", "Brainstorming", "Choral Reading", "Cloze Passages", "Cognates", "Collaborative Dialogues",
-                        "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
-                        "Exit Slips", "Field Trips", "First Language Support", "Fish Bowl", "Four Corners", "Graphic Organizers",
-                        "Guided Reading", "Hand-on Activities", "Headbands", "Information Gap", "Inside Outside Circle",
-                        "Jigsaw Reading", "K-W-L Chart", "Language Experience Approach (LEA)", "Line Up", "Listen and Point",
-                        "Memory Lane", "Mix and Match", "One-Word", "One-Word Sentences", "Open Sort Tasks", "Paraphrase Passport",
-                        "Picture Word Inductive Model", "Quickwrites", "Reader's Theatre", "Report Frames", "Role Play",
-                        "Roving Charts", "Self-Assessment Scales for Vocabulary Learning", "Sentence-Picture Match", "Shared Writing",
-                        "Snowball", "Stir the Class", "Story Maps", "Strategy Cards", "Structured Note-Taking", "Symbolic Storyboarding",
-                        "T Charts", "Tableaux", "Teach the Text Backward", "Teacher Talk", "Think-Pair-Share", "Think-Pair-Share Squared",
-                        "Ticket to Leave", "Total Physical Response", "Turn and Talk", "Varied Grouping Formats", "Varied Questioning Formats",
-                        "Wait Time", "Wait Time Two", "Word Walls", "Wordless Picture Books", "Write a Letter"
-                    ]
-                },
-                "Provide Scaffolding for Learning": {
-                    "Primary Strategies": [
-                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
-                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
-                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
-                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
-                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
-                    ],
-                    "Additional Strategies": [
-                        "Act It Out", "Brainstorming", "Choral Reading", "Cloze Passages", "Cognates", "Collaborative Dialogues",
-                        "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
-                        "Exit Slips", "Field Trips", "First Language Support", "Fish Bowl", "Four Corners", "Graphic Organizers",
-                        "Guided Reading", "Hand-on Activities", "Headbands", "Information Gap", "Inside Outside Circle",
-                        "Jigsaw Reading", "K-W-L Chart", "Language Experience Approach (LEA)", "Line Up", "Listen and Point",
-                        "Memory Lane", "Mix and Match", "One-Word", "One-Word Sentences", "Open Sort Tasks", "Paraphrase Passport",
-                        "Picture Word Inductive Model", "Quickwrites", "Reader's Theatre", "Report Frames", "Role Play",
-                        "Roving Charts", "Self-Assessment Scales for Vocabulary Learning", "Sentence-Picture Match", "Shared Writing",
-                        "Snowball", "Stir the Class", "Story Maps", "Strategy Cards", "Structured Note-Taking", "Symbolic Storyboarding",
-                        "T Charts", "Tableaux", "Teach the Text Backward", "Teacher Read Aloud", "Teacher Talk", "Text to Graphics and Back Again",
-                        "Think-Pair-Share", "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Turn and Talk",
-                        "Varied Grouping Formats", "Varied Questioning Formats", "Wait Time", "Wait Time Two", "Word Walls", "Wordless Picture Books",
-                        "Write a Letter"
-                    ]
-                },
-                "Integrate Content and Language Learning": {
-                    "Primary Strategies": [
-                        "Choral Reading", "Closed Sort Tasks", "Cloze Passages", "Cognates", "Collaborative Dialogues",
-                        "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
-                        "Graphic Organizers", "Graphic Organizers for Writing", "Guided Reading", "H Charts", "Information Gap",
-                        "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "Language Experience Approach (LEA)",
-                        "Mix and Match", "Model Academic Language", "Open Sort Tasks", "Peer-Assisted Learning Strategies (PALS)",
-                        "Paraphrase Passport", "Picture Walk", "Question-Answer Relationships (QAR)", "Reader's Theatre",
-                        "Reciprocal Teaching", "Report Frames", "Shared Reading", "Shared Writing", "Story Maps", "Teach the Text Backward",
-                        "Teacher Read Aloud", "Text to Graphics and Back Again", "Think-Write-Pair-Share", "Word/Picture Banks",
-                        "Write a Letter"
-                    ],
-                    "Additional Strategies": [
-                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
-                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
-                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
-                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
-                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
-                    ]
-                },
-                "Build on Background and Interests": {
-                    "Primary Strategies": [
-                        "4 to 1", "Anticipation Guides", "Choral Reading", "Closed Sort Tasks", "Cloze Passages", "Cognates",
-                        "Collaborative Dialogues", "Content Learning Logs", "Dialogue Journals", "Dictations", "Directed Reading/Thinking (DRTA)",
-                        "Graphic Organizers", "Graphic Organizers for Writing", "Guided Reading", "H Charts", "Information Gap",
-                        "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "Language Experience Approach (LEA)",
-                        "Mix and Match", "Model Academic Language", "Open Sort Tasks", "Peer-Assisted Learning Strategies (PALS)",
-                        "Paraphrase Passport", "Picture Walk", "Question-Answer Relationships (QAR)", "Reader's Theatre",
-                        "Reciprocal Teaching", "Report Frames", "Shared Reading", "Shared Writing", "Story Maps", "Teach the Text Backward",
-                        "Teacher Read Aloud", "Text to Graphics and Back Again", "Think-Write-Pair-Share", "Word/Picture Banks",
-                        "Write a Letter"
-                    ],
-                    "Additional Strategies": [
-                        "Concept/Idea Maps", "Contextualize Language", "Cornell Notes", "Give One - Get One", "I Have... Who Has...?",
-                        "Line Up", "Patterned Oral Language", "Roving Charts", "Self-Assessment Scales for Vocabulary Learning",
-                        "Snowball", "Structured Note-Taking", "Stir the Class", "T Charts", "Teacher Talk", "Think-Pair-Share",
-                        "Think-Pair-Share Squared", "Ticket to Leave", "Total Physical Response", "Varied Grouping Formats",
-                        "Varied Questioning Formats", "Wait Time", "Wait Time Two"
-                    ]
-                }
+            const teacherCentered = [
+                "Anticipation Guides", "Cloze Passages", "Dictations", "Directed Reading/Thinking (DRTA)", "Guided Reading",
+                "Listen and Point", "Model Academic Language", "Picture Walk", "Shared Reading", "Shared Writing",
+                "Structured Note-Taking", "Teach the Text Backward", "Teacher Read Aloud", "Teacher Talk", "Total Physical Response",
+                "Wait Time", "Wait Time Two"
+            ].sort();
+            
+            const studentCenteredAndCollaborative = [
+                "4 to 1", "Act It Out", "Brainstorming", "Choral Reading", "Closed Sort Tasks", "Cognates", "Collaborative Dialogues",
+                "Concept/Idea Maps", "Content Learning Logs", "Contextualize Language", "Cornell Notes", "Dialogue Journals", "Exit Slips", "Field Trips", "First Language Support", "Fish Bowl", "Four Corners", "Give One - Get One",
+                "Graphic Organizers", "Graphic Organizers for Writing", "H Charts", "Hand-on Activities", "Headbands",
+                "I Have... Who Has...?", "Information Gap", "Inside Outside Circle", "Jigsaw Reading", "Key Sentence Frames", "K-W-L Chart",
+                "Language Experience Approach (LEA)", "Line Up", "Memory Lane", "Mix and Match", "One-Word", "One-Word Sentences", "Open Sort Tasks",
+                "Paraphrase Passport", "Patterned Oral Language", "Peer-Assisted Learning Strategies (PALS)", "Picture Word Inductive Model",
+                "Question-Answer Relationships (QAR)", "Quickwrites", "Reader's Theatre", "Reciprocal Teaching", "Report Frames", "Role Play", "Roving Charts",
+                "Self-Assessment Scales for Vocabulary Learning", "Sentence-Picture Match", "Snowball", "Stir the Class", "Story Maps",
+                "Strategy Cards", "Symbolic Storyboarding", "T Charts", "Tableaux", "Text to Graphics and Back Again", "Think-Pair-Share",
+                "Think-Pair-Share Squared", "Think-Write-Pair-Share", "Ticket to Leave", "Turn and Talk", "Varied Grouping Formats", "Varied Questioning Formats",
+                "Wordless Picture Books", "Word Walls", "Word/Picture Banks", "Write a Letter"
+            ].sort();
+
+            const categorizedStrategies = {
+                "Teacher-Centered": teacherCentered,
+                "Student-Centered": studentCenteredAndCollaborative
             };
+            
+            const allStrategies = Object.values(categorizedStrategies).flat().sort();
 
             const glossaryData = {
                 "4 to 1": "A strategy for summarizing a text. Students identify four key concepts, four key details, four key vocabulary words, and one main idea.",
@@ -316,8 +227,8 @@
                 "Peer-Assisted Learning Strategies (PALS)": "A structured cooperative learning strategy where students work in pairs to help each other learn. One student is the 'coach' and the other is the 'reader' or 'writer.'",
                 "Picture Walk": "A pre-reading strategy where students look through the pictures in a book with the teacher and discuss what they see. This builds background knowledge and helps them make predictions.",
                 "Picture Word Inductive Model": "A literacy strategy where students identify objects in a picture, and the teacher writes the words underneath. This helps them connect spoken words to their written form.",
-                "Quickwrites": "A short, timed writing activity where students write for a set period without worrying about grammar or spelling. It is a way to generate ideas and increase fluency.",
                 "Question-Answer Relationships (QAR)": "A reading comprehension strategy that teaches students to differentiate between questions that are answered 'right there' in the text, those that require 'think and search,' and those that are 'on my own' (from background knowledge).",
+                "Quickwrites": "A short, timed writing activity where students write for a set period without worrying about grammar or spelling. It is a way to generate ideas and increase fluency.",
                 "Reader's Theatre": "A dramatic reading of a story or script. Students read from their scripts and use their voices and gestures to portray characters. It builds fluency and comprehension.",
                 "Reciprocal Teaching": "A collaborative reading strategy where students take turns leading a group discussion about a text using four key skills: summarizing, questioning, clarifying, and predicting. It fosters active comprehension.",
                 "Report Frames": "A writing scaffold that provides students with a structure for a report, with headings and sentence starters to guide their writing. It reduces the cognitive load of organizing a text.",
@@ -341,6 +252,7 @@
                 "Text to Graphics and Back Again": "A strategy where students transform a written text into a graphic organizer or visual representation, and then use that graphic to write a new text. This deepens understanding.",
                 "Think-Pair-Share": "A collaborative strategy where students first think individually about a question, then pair up with a partner to discuss their thoughts, and finally share their ideas with the whole class.",
                 "Think-Pair-Share Squared": "An extension of Think-Pair-Share where after the initial partner discussion, the pair joins another pair to form a group of four to discuss their ideas. This allows for more complex conversations.",
+                "Think-Write-Pair-Share": "A writing-focused variation of Think-Pair-Share where students first write their thoughts, then discuss them with a partner, and finally share with the group.",
                 "Ticket to Leave": "A quick assessment strategy where students must complete a task or answer a question on a small piece of paper before they are allowed to leave the classroom.",
                 "Total Physical Response": "A language acquisition strategy where students respond to commands with physical actions. This builds comprehension of new words in a low-anxiety way.",
                 "Turn and Talk": "A quick, informal speaking strategy where a student turns to a nearby partner to discuss a topic or answer a question. This provides more speaking opportunities than whole-class discussion.",
@@ -349,94 +261,97 @@
                 "Wait Time": "The intentional pause after asking a question before calling on a student to answer. This provides time for students to formulate a response.",
                 "Wait Time Two": "The intentional pause after a student has finished speaking. This allows the student to elaborate and gives other students time to process what was said before the conversation continues.",
                 "Word Walls": "A classroom display of high-frequency words, academic vocabulary, or content-specific terms. It serves as a visual reference for students during reading and writing.",
+                "Word/Picture Banks": "A visual and linguistic resource for students, consisting of a collection of key words and corresponding pictures, used to support reading and writing activities.",
                 "Wordless Picture Books": "A type of book that tells a story through illustrations alone. Students can use them to practice retelling skills and to build narrative language.",
                 "Write a Letter": "A writing strategy where students write a letter to the teacher, a classmate, or a fictional character about a topic. This provides an authentic and personal context for writing practice."
             };
 
             const strategiesContainer = document.getElementById('strategies-container');
-            const principleButtons = document.getElementById('principle-buttons');
+            const filterDropdown = document.getElementById('category-filter');
+            const topicInput = document.getElementById('topic-input');
 
-            // Function to generate and append all principle cards
-            function renderAllPrinciples() {
+            function renderStrategies(filterKey) {
                 strategiesContainer.innerHTML = ''; // Clear previous content
 
-                for (const principle in strategiesData) {
-                    const principleId = principle.toLowerCase().replace(/\s+/g, '-');
-                    const card = document.createElement('div');
-                    card.id = principleId;
-                    card.className = 'principle-card p-6 mb-8';
+                const strategiesToRender = filterKey === "All Strategies" ? allStrategies : categorizedStrategies[filterKey];
 
-                    const title = document.createElement('h2');
-                    title.className = 'text-2xl font-bold mb-4';
-                    title.textContent = principle;
-                    card.appendChild(title);
+                const card = document.createElement('div');
+                card.className = 'strategy-list-card p-6';
 
-                    for (const strategyType in strategiesData[principle]) {
-                        if (strategiesData[principle][strategyType].length > 0) {
-                            const sectionHeading = document.createElement('h3');
-                            sectionHeading.className = 'text-lg font-semibold mt-4 mb-2 border-b-2 border-pink-300 pb-1';
-                            sectionHeading.textContent = strategyType;
-                            card.appendChild(sectionHeading);
+                const list = document.createElement('ul');
+                list.className = 'space-y-2';
 
-                            const list = document.createElement('ul');
-                            list.className = 'space-y-2';
+                strategiesToRender.forEach(strategyName => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'strategy-item cursor-pointer rounded-lg p-2 transition-all';
+                    listItem.innerHTML = `
+                        <span>${strategyName}</span>
+                        <svg class="arrow" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 12L13 7 8 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    `;
 
-                            strategiesData[principle][strategyType].forEach(strategyName => {
-                                const listItem = document.createElement('li');
-                                listItem.className = 'strategy-item cursor-pointer rounded-lg p-2 transition-all';
-                                listItem.innerHTML = `
-                                    <span>${strategyName}</span>
-                                    <svg class="arrow" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M8 12L13 7 8 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                `;
+                    listItem.addEventListener('click', () => {
+                        const description = glossaryData[strategyName] || 'No description found.';
+                        let glossaryDiv = listItem.nextElementSibling;
+                        const arrow = listItem.querySelector('.arrow');
 
-                                listItem.addEventListener('click', (event) => {
-                                    const description = glossaryData[strategyName] || 'No description found.';
-                                    let glossaryDiv = listItem.nextElementSibling;
-                                    const arrow = listItem.querySelector('.arrow');
-
-                                    if (glossaryDiv && glossaryDiv.classList.contains('glossary-content')) {
-                                        const isVisible = glossaryDiv.style.display === 'block';
-                                        glossaryDiv.style.display = isVisible ? 'none' : 'block';
-                                        arrow.classList.toggle('arrow-rotated', !isVisible);
-                                    } else {
-                                        glossaryDiv = document.createElement('div');
-                                        glossaryDiv.className = 'glossary-content border-pink-500 rounded-lg bg-pink-50';
-                                        
-                                        glossaryDiv.innerHTML = `
-                                            <p>${description}</p>
-                                            <button class="api-button mt-4 bg-pink-200 hover:bg-pink-300">
-                                                <span class="emoji">&#x1F64B;</span> Generate Classroom Example
-                                            </button>
-                                            <div class="example-output mt-4 border-t-2 border-pink-300 pt-4"></div>
-                                        `;
-                                        listItem.after(glossaryDiv);
-                                        glossaryDiv.style.display = 'block';
-                                        arrow.classList.add('arrow-rotated');
-
-                                        const exampleButton = glossaryDiv.querySelector('.api-button');
-                                        const exampleOutput = glossaryDiv.querySelector('.example-output');
-                                        exampleButton.addEventListener('click', () => generateExample(strategyName, exampleButton, exampleOutput));
-                                    }
-                                });
-                                list.appendChild(listItem);
+                        if (glossaryDiv && glossaryDiv.classList.contains('glossary-content')) {
+                            const isVisible = glossaryDiv.style.display === 'block';
+                            glossaryDiv.style.display = isVisible ? 'none' : 'block';
+                            arrow.classList.toggle('arrow-rotated', !isVisible);
+                        } else {
+                            // Close any other open glossaries
+                            document.querySelectorAll('.glossary-content').forEach(div => {
+                                div.style.display = 'none';
                             });
-                            card.appendChild(list);
+                            document.querySelectorAll('.arrow').forEach(arr => {
+                                arr.classList.remove('arrow-rotated');
+                            });
+
+                            glossaryDiv = document.createElement('div');
+                            glossaryDiv.className = 'glossary-content border-pink-500 rounded-lg bg-pink-50';
+                            
+                            glossaryDiv.innerHTML = `
+                                <p>${description}</p>
+                                <button class="api-button mt-4 bg-pink-200 hover:bg-pink-300" id="generate-activity-btn">
+                                    <span class="inline-block mr-1">✨</span>Generate Activity
+                                </button>
+                                <div class="example-output mt-4 border-t-2 border-pink-300 pt-4"></div>
+                            `;
+                            listItem.after(glossaryDiv);
+                            glossaryDiv.style.display = 'block';
+                            arrow.classList.add('arrow-rotated');
+
+                            const generateActivityButton = glossaryDiv.querySelector('#generate-activity-btn');
+                            const exampleOutput = glossaryDiv.querySelector('.example-output');
+                            
+                            generateActivityButton.addEventListener('click', () => {
+                                const topic = topicInput.value.trim();
+                                if (topic) {
+                                    generateLessonActivity(strategyName, topic, generateActivityButton, exampleOutput);
+                                } else {
+                                    // Replace alert with a more user-friendly message
+                                    exampleOutput.innerHTML = '<p class="text-red-500">Please enter a topic first!</p>';
+                                }
+                            });
                         }
-                    }
-                    strategiesContainer.appendChild(card);
-                }
+                    });
+                    list.appendChild(listItem);
+                });
+                card.appendChild(list);
+                strategiesContainer.appendChild(card);
             }
 
-            async function generateExample(strategyName, button, outputDiv) {
+            async function generateLessonActivity(strategyName, topic, button, outputDiv) {
                 const originalButtonText = button.innerHTML;
-                button.innerHTML = `<span class="spinner inline-block mr-2"></span> Generating...`;
+                
+                button.innerHTML = `<span class="spinner inline-block mr-2"></span> Planning...`;
                 button.disabled = true;
                 outputDiv.innerHTML = '';
 
-                const systemPrompt = "Act as an experienced teacher. Provide a concise, single-paragraph example of how the requested strategy would be used in a classroom setting.";
-                const userQuery = `Give a classroom example for the strategy: "${strategyName}"`;
+                const systemPrompt = "You are an expert teacher and curriculum developer. Your task is to create a brief, actionable lesson plan activity. Do not include a full lesson plan; focus on a single activity. The response should be a concise paragraph that includes the strategy, the topic, and the steps for the activity. Use clear and encouraging language.";
+                const userQuery = `Create a classroom activity for the strategy "${strategyName}" on the topic of "${topic}".`;
                 const apiKey = "";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
@@ -480,20 +395,22 @@
                 }
 
                 if (!response || !response.ok) {
-                    outputDiv.innerHTML = '<p class="text-red-500">Failed to generate example. Please try again later.</p>';
+                    outputDiv.innerHTML = '<p class="text-red-500">Failed to generate activity. Please try again later.</p>';
                     button.innerHTML = originalButtonText;
                     button.disabled = false;
                     return;
                 }
 
                 try {
+                    button.innerHTML = `<span class="spinner inline-block mr-2"></span> Generating...`;
+
                     const result = await response.json();
                     const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 
                     if (text) {
                         outputDiv.innerHTML = `<p class="text-gray-700">${text}</p>`;
                     } else {
-                        outputDiv.innerHTML = '<p class="text-gray-700">No example could be generated.</p>';
+                        outputDiv.innerHTML = '<p class="text-gray-700">No activity could be generated.</p>';
                     }
                 } catch (error) {
                     console.error('Error parsing JSON or extracting text:', error);
@@ -503,27 +420,12 @@
                     button.disabled = false;
                 }
             }
-
-
-            // Handle smooth scrolling for principle buttons
-            principleButtons.addEventListener('click', (event) => {
-                const button = event.target.closest('button');
-                if (button) {
-                    const principleName = button.dataset.principle;
-                    const principleId = principleName.toLowerCase().replace(/\s+/g, '-');
-                    const targetElement = document.getElementById(principleId);
-
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
+            
+            filterDropdown.addEventListener('change', (event) => {
+                renderStrategies(event.target.value);
             });
-
-            // Initial render of all content
-            renderAllPrinciples();
+            
+            renderStrategies('All Strategies');
         });
     </script>
 </body>
