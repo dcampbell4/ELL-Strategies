@@ -409,51 +409,57 @@
                 strategiesContainer.appendChild(card);
             }
 
-            async function geminiCall(systemPrompt, userQuery) {
-                const apiKey = "AIzaSyDO043txIxrsI9bVaQmLl4lMU99IJf_ly8";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+/**
+             * The function that makes the call to the Gemini API with exponential backoff.
+             * @param {string} systemPrompt - The instruction for the model's persona and task.
+             * @param {string} userQuery - The main content/query for the model to process.
+             * @returns {Promise<Object>} The JSON response from the API.
+             */
+            const geminiCall = async (systemPrompt, userQuery) => {
+                // FIX: Model name updated to the current, supported preview model.
+                const model = 'gemini-2.5-flash-preview-09-2025'; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
                 const payload = {
                     contents: [{ parts: [{ text: userQuery }] }],
+                    // Using Google Search grounding tool
                     tools: [{ "google_search": {} }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
                 };
 
-                let response;
-                let retries = 0;
-                const maxRetries = 3;
-                const baseDelay = 1000;
-
-                while (retries < maxRetries) {
+                const MAX_RETRIES = 5;
+                for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
                     try {
-                        response = await fetch(apiUrl, {
+                        const response = await fetch(apiUrl, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload)
                         });
 
-                        if (response.status === 429) {
-                            const delay = baseDelay * Math.pow(2, retries);
-                            retries++;
-                            await new Promise(res => setTimeout(res, delay));
-                            continue;
+                        // Check for 404 explicitly to catch the old model issue faster
+                        if (response.status === 404) {
+                            throw new Error(`HTTP error! status: 404. Model '${model}' not found. Please check the model name in the API URL.`);
                         }
 
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
 
-                        return await response.json();
+                        return response.json();
+
                     } catch (error) {
-                        console.error('Fetch error:', error);
-                        const delay = baseDelay * Math.pow(2, retries);
-                        retries++;
-                        await new Promise(res => setTimeout(res, delay));
+                        console.error(`Attempt ${attempt + 1} failed: ${error}`);
+                        if (attempt === MAX_RETRIES - 1) {
+                            throw new Error('Failed to connect to API after multiple retries.');
+                        }
+                        // Exponential backoff delay
+                        const delay = Math.pow(2, attempt) * 1000 + Math.random() * 500;
+                        await new Promise(resolve => setTimeout(resolve, delay));
                     }
                 }
-                throw new Error("Failed to connect to API after multiple retries.");
-            }
-
+            };
             async function generateLessonActivity(strategyName, topic, button, outputDiv) {
                 const originalButtonText = button.innerHTML;
                 
@@ -533,6 +539,7 @@
     </script>
 </body>
 </html>
+
 
 
 
